@@ -1,3 +1,4 @@
 django_kafka_example/django_kafka_example/__pycache__/
 kafka-logs/
 zookeeper/
+hsperfdata_root/
