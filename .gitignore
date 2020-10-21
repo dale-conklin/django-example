@@ -4,3 +4,4 @@ hsperfdata_root/
 ve/
 .vscode/
 docker-files/django_kafka_example/django_kafka_example/__pycache__/
+postgres-data/
