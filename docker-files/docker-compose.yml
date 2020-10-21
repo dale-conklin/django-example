@@ -13,6 +13,7 @@ services:
     image: dwc-kafka
     volumes:
       - /home/dale/django_example/kafka-logs:/tmp/kafka-logs
+      - /home/dale/django_example/zookeeper:/tmp/zookeeper
   web:
     image: django_example_web
     command: python manage.py runserver 0.0.0.0:8000
