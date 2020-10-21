@@ -8,13 +8,18 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=sunnyday
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - /home/dale/django_example/postgres-data:/var/lib/postgresql/data
+  kafka-svr:
+    image: dwc-kafka
+    volumes:
+      - /home/dale/django_example/kafka-logs:/tmp/kafka-logs
   web:
     image: django_example_web
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./django_kafka_example:/code
+      - /home/dale/django_example/docker-files/django_kafka_example:/code
     ports:
       - "8000:8000"
     depends_on:
       - db
+      - kafka-svr
