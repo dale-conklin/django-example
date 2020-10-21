@@ -1,7 +1,9 @@
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse    
 from django.shortcuts import render
 
 from .forms import CreateTopicForm
+from .kafka_actions import get_kafka_topics, create_kafka_topic
 
 def create_topic(request):
     # if this is a POST request we need to process the form data
@@ -11,9 +13,10 @@ def create_topic(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            # ...
+            print(f"{form.cleaned_data}")
+            create_kafka_topic(form.cleaned_data.get('topic_name'))
             # redirect to a new URL:
-            return HttpResponseRedirect('/thanks/')
+            return HttpResponseRedirect('/get-topics/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -22,5 +25,6 @@ def create_topic(request):
     return render(request, 'create-topic.html', {'form': form})
 
 def get_topics(request):
-    
-    return render(request, 'get-topics.html', {'title': 'new title', 'cal': 'new cal'} )
+    topics = get_kafka_topics()
+    #return render(request, 'get-topics.html', {'title': 'new title', 'cal': 'new cal'} )
+    return HttpResponse(f"{topics}")
