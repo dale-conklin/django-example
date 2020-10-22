@@ -9,7 +9,8 @@ WORKDIR /opt/kafka-2.6.0-src
 
 RUN ./gradlew jar -PscalaVersion=2.13.2
 
-EXPOSE 2181 2888 3888 9092
+EXPOSE 9092
+RUN rm -rf /opt/kafka-2.6.0-src/config
 
 COPY ./startup.sh /
 

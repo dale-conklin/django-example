@@ -24,4 +24,18 @@ def create_kafka_topic(new_topic: str):
         return True
 
     return False
+
+def get_kafka_events(topic: str):
+    consumer = kafka.KafkaConsumer(topic, client_id=CLIENT_ID, bootstrap_servers=[KAFKA_SERVER])
+    msgs = []
+    for message in consumer:
+        msgs.append
+    return msgs
+
+def produce_kafka_event(topic: str, event: str):
+    producer = kafka.KafkaProducer(client_id=CLIENT_ID, bootstrap_servers=[KAFKA_SERVER])
+    producer.send()
+    producer.send(topic, bytes(topic, encoding='utf-8'))
     
+    return
+
