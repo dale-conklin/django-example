@@ -20,5 +20,7 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('create-topic/', views.create_topic, name='create-topic'),
-    path('get-topics/', views.get_topics, name='get-topics')
+    path('get-topics/', views.get_topics, name='get-topics'),
+    path('create-event/', views.create_event, name='create-event'),
+    path('get-events/', views.get_events, name='get-events')
 ]

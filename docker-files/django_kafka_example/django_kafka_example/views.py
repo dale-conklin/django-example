@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse    
 from django.shortcuts import render
 
-from .forms import CreateTopicForm, CreateEventForm
+from .forms import CreateTopicForm, CreateEventForm, GetEventsForm
 from .kafka_actions import get_kafka_topics, create_kafka_topic, produce_kafka_event, get_kafka_events
 
 def create_topic(request):
@@ -36,15 +36,25 @@ def create_event(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            print(f"{form.cleaned_data}")
-            create_kafka_topic(form.cleaned_data.get('topic_name'))
+            produce_kafka_event(form.cleaned_data.get('topic_name'), form.cleaned_data.get('event_str'))
             # redirect to a new URL:
-            return HttpResponseRedirect('/get-topics/')
+            return HttpResponseRedirect('/get-events/')
     else:
-        form = CreateTopicForm()
+        form = CreateEventForm()
 
     return render(request, 'create-event.html', {'form': form})
 
 def get_events(request):
-    topics = get_kafka_events()
-    return HttpResponse(f"{topics}")
+    events = []
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = GetEventsForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            events = get_kafka_events(form.cleaned_data.get('topic_name'))
+    else:
+        form = GetEventsForm()
+    # html = ''.join(str(f'<br>{e}<br>') for e in events)
+
+    return render(request, 'get-events.html', {'form': form, 'events': events})

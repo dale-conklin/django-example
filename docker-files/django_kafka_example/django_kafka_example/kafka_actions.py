@@ -1,4 +1,5 @@
 import kafka
+import json
 from kafka.admin import KafkaAdminClient, NewTopic
 
 KAFKA_SERVER = 'kafka-svr:9092'
@@ -26,16 +27,23 @@ def create_kafka_topic(new_topic: str):
     return False
 
 def get_kafka_events(topic: str):
-    consumer = kafka.KafkaConsumer(topic, client_id=CLIENT_ID, bootstrap_servers=[KAFKA_SERVER])
+    consumer = kafka.KafkaConsumer(client_id=CLIENT_ID,
+                                   bootstrap_servers=[KAFKA_SERVER],
+                                   auto_offset_reset='earliest',
+                                   value_deserializer=lambda m: m.decode('utf-8'),
+                                   consumer_timeout_ms=1000)
+    mypartition = kafka.TopicPartition(topic, 0)
+    consumer.assign([mypartition])
+    consumer.seek_to_beginning(mypartition)
     msgs = []
-    for message in consumer:
-        msgs.append
+    for msg in consumer:
+        msgs.append(msg.value)
+    
     return msgs
 
 def produce_kafka_event(topic: str, event: str):
     producer = kafka.KafkaProducer(client_id=CLIENT_ID, bootstrap_servers=[KAFKA_SERVER])
-    producer.send()
-    producer.send(topic, bytes(topic, encoding='utf-8'))
+    producer.send(topic, bytes(event, encoding='utf-8'))
+    producer.close()
     
     return
-
